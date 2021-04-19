@@ -61,8 +61,11 @@ class Raycast {
           const currentIntersectionX = boxLimits.initialX + t * (boxLimits.finalX - boxLimits.initialX);
           const currentIntersectionY = boxLimits.initialY + t * (boxLimits.finalY - boxLimits.initialY);
   
-          const a = initialX - boxLimits.initialX;
-          const b = initialY - boxLimits.initialY;
+          const x = (boxLimits.initialX + boxLimits.finalX) / 2;
+          const y = (boxLimits.initialY + boxLimits.finalY) / 2;
+
+          const a = initialX - x;
+          const b = initialY - y;
   
           const currentProximity = Math.sqrt( a * a +  b * b );
           
