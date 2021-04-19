@@ -42,6 +42,7 @@ class Raycast {
   cast(initialX, initialY, finalX, finalY) {
     let intersectX = null;
     let intersectY = null;
+    let proximity = Infinity;
 
     this.boxes.map( box => {
       const boxLimits = box.getBoundariesPoints();
@@ -55,8 +56,19 @@ class Raycast {
       const u = -((boxLimits.initialX - boxLimits.finalX) * (boxLimits.initialY - initialY) - (boxLimits.initialY - boxLimits.finalY) * (boxLimits.initialX - initialX)) / i;
 
       if ( t > 0 && t < 1 && u > 0 ) {
-        intersectX = boxLimits.initialX + t * (boxLimits.finalX - boxLimits.initialX);
-        intersectY = boxLimits.initialY + t * (boxLimits.finalY - boxLimits.initialY);
+        const currentIntersectX = boxLimits.initialX + t * (boxLimits.finalX - boxLimits.initialX);
+        const currentIntersectY = boxLimits.initialY + t * (boxLimits.finalY - boxLimits.initialY);
+
+        const a = initialX - boxLimits.initialX;
+        const b = initialY - boxLimits.initialY;
+
+        const currentProximity = Math.sqrt( a * a +  b * b );
+        
+        if ( currentProximity < proximity ) {
+          intersectX = currentIntersectX;
+          intersectY = currentIntersectY;
+          proximity = currentProximity;
+        }
       }
     });
 
