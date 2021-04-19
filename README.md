@@ -2,6 +2,8 @@
 
 Repositório pra aprender sobre raycasting, utilizando javascript.
 
+![](example.gif)
+
 ### Referências
 
 Criar linhas com ângulo
