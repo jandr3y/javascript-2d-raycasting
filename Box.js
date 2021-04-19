@@ -1,16 +1,15 @@
 class Box {
-  constructor(x, y, size, context){
+  constructor(x, y, w, h, context){
     this.x = x;
     this.y = y;
-    this.size = size;
+    this.w = w;
+    this.h = h;
     this._context = context;
   }
 
   draw() {
-    this._context.fillStyle = 'black';
-    this._context.beginPath();
-    this._context.rect(this.x, this.y, this.size, this.size);
-    this._context.stroke();
+    this._context.fillStyle = 'purple';
+    this._context.fillRect(this.x, this.y, this.w, this.h);
   }
 
   getBoundariesPoints() {
@@ -18,26 +17,26 @@ class Box {
       {
         initialX: this.x,
         initialY: this.y,
-        finalX: this.x + this.size,
+        finalX: this.x + this.w,
         finalY: this.y,
       },
       {
         initialX: this.x,
         initialY: this.y,
         finalX: this.x,
-        finalY: this.y + this.size,
-      },
-      {
-        initialX: this.x + this.size,
-        initialY: this.y,
-        finalX: this.x + this.size,
-        finalY: this.y + this.size,
+        finalY: this.y + this.h,
       },
       {
         initialX: this.x,
-        initialY: this.y + this.size,
-        finalX: this.x + this.size,
-        finalY: this.y + this.size,
+        initialY: this.y + this.h,
+        finalX: this.x + this.w,
+        finalY: this.y + this.h,
+      },
+      {
+        initialX: this.x + this.w,
+        initialY: this.y,
+        finalX: this.x + this.w,
+        finalY: this.y + this.h,
       }
     ]
   }

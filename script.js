@@ -1,30 +1,27 @@
 (function(){
   
-  
   function initialize() {
     const screen = document.getElementById('screen');
     const context = screen.getContext('2d');
+    const inputEvents = new InputEvents(screen);
 
     const player = new Player(200, 200, context);
     const boxes = [ 
-      new Box(600, 400, 80, context),
-      new Box(100, 500, 80, context),
-      new Box(500, 100, 80, context),
-      new Box(30, 30, 80, context)
+      new Box(600, 400, 150, 10, context),
+      new Box(750, 400, 10, 150, context),
+      new Box(100, 500, 80, 300, context),
+      new Box(500, 100, 80, 80, context),
+      new Box(30, 30, 80, 80, context)
     ];
-    
-    
-    screen.addEventListener('mousemove', e => {
-      player.x = e.clientX - player.size
-      player.y = e.clientY - player.size
-    })
 
     function gameloop() {
-      context.clearRect(0, 0, screen.width, screen.height)
-      boxes.map( box => box.draw() );
-      const raycast = new Raycast(player, 200, boxes, context);
+      context.clearRect(0, 0, screen.width, screen.height); // Clear canvas
+
+      player.movement(inputEvents.keyboardMapping); 
+      boxes.map(box => box.draw());
+
+      const raycast = new Raycast(player, 1080, boxes, context);
       raycast.draw();
-      player.draw();
       window.requestAnimationFrame(gameloop);
     }
 

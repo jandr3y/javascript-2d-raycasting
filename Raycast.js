@@ -11,7 +11,7 @@ class Raycast {
   generateRays(points) {
     let angleIncrease = 0;
     let angles = (new Array(points)).fill(1).map( x => {
-      return angleIncrease += (360 / points);
+      return angleIncrease += (this.object.fov / points);
     });
 
     return angles.map( angle => this.ray(angle));
@@ -31,11 +31,20 @@ class Raycast {
   }
 
   draw() {
+    // ctx.createRadialGradient(this.x, cHeight - this.y, this.radius, this.x, cHeight - this.y, this.viewRange);
+    var gradient = this._context.createRadialGradient(this.object.x, this.object.y, 360, this.object.x, this.object.y, 20);
+    gradient.addColorStop(0, "black")
+    gradient.addColorStop(1, "white");
+
     this.rays.map( ray => {
       this._context.beginPath();
+      this._context.strokeStyle = gradient;
+      this._context.lineCap = "round";
+      this._context.lineWidth = 3;
       this._context.moveTo(ray.initialX, ray.initialY);
       this._context.lineTo(ray.finalX, ray.finalY);
       this._context.stroke();
+      this._context.closePath();
     });
   }
 
@@ -64,12 +73,12 @@ class Raycast {
           const x = (boxLimits.initialX + boxLimits.finalX) / 2;
           const y = (boxLimits.initialY + boxLimits.finalY) / 2;
 
-          const a = initialX - x;
-          const b = initialY - y;
+          const a = initialX - currentIntersectionX;
+          const b = initialY - currentIntersectionY;
   
           const currentProximity = Math.sqrt( a * a +  b * b );
           
-          if ( currentProximity < proximity ) {
+          if ( currentProximity <= proximity ) {
             intersectionX = currentIntersectionX;
             intersectionY = currentIntersectionY;
             proximity = currentProximity;
