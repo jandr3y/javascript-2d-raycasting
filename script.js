@@ -22,7 +22,7 @@
     function gameloop() {
       context.clearRect(0, 0, screen.width, screen.height)
       boxes.map( box => box.draw() );
-      const raycast = new Raycast(player, 150, boxes, context);
+      const raycast = new Raycast(player, 200, boxes, context);
       raycast.draw();
       player.draw();
       window.requestAnimationFrame(gameloop);

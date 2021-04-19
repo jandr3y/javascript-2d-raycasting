@@ -20,12 +20,12 @@ class Raycast {
   ray(angle) {
     const [x, y] = this.object.getCenter();
     let [ finalX, finalY ] = this.lineToAngle(x, y, 1000, angle);
-    let [ intersectX, intersectY ] = this.cast(x, y, finalX, finalY);
+    let [ intersectionX, intersectionY ] = this.cast(x, y, finalX, finalY);
     return {
       initialX: x,
       initialY: y,
-      finalX: intersectX,
-      finalY: intersectY,
+      finalX: intersectionX,
+      finalY: intersectionY,
       angle: angle
     }
   }
@@ -40,40 +40,43 @@ class Raycast {
   }
 
   cast(initialX, initialY, finalX, finalY) {
-    let intersectX = null;
-    let intersectY = null;
+    let intersectionX = null;
+    let intersectionY = null;
     let proximity = Infinity;
 
     this.boxes.map( box => {
-      const boxLimits = box.getBoundariesPoints();
-      const i = (boxLimits.initialX - boxLimits.finalX) * (initialY - finalY) - (boxLimits.initialY - boxLimits.finalY) * (initialX - finalX)
+      const boxLimitsArray = box.getBoundariesPoints();
       
-      if ( i == 0 ) {
-        return [ finalX, finalY ];
-      }
-
-      const t = ((boxLimits.initialX - initialX) * (initialY - finalY) - (boxLimits.initialY - initialY) * (initialX - finalX)) / i;
-      const u = -((boxLimits.initialX - boxLimits.finalX) * (boxLimits.initialY - initialY) - (boxLimits.initialY - boxLimits.finalY) * (boxLimits.initialX - initialX)) / i;
-
-      if ( t > 0 && t < 1 && u > 0 ) {
-        const currentIntersectX = boxLimits.initialX + t * (boxLimits.finalX - boxLimits.initialX);
-        const currentIntersectY = boxLimits.initialY + t * (boxLimits.finalY - boxLimits.initialY);
-
-        const a = initialX - boxLimits.initialX;
-        const b = initialY - boxLimits.initialY;
-
-        const currentProximity = Math.sqrt( a * a +  b * b );
+      boxLimitsArray.map( boxLimits => {
+        const i = (boxLimits.initialX - boxLimits.finalX) * (initialY - finalY) - (boxLimits.initialY - boxLimits.finalY) * (initialX - finalX)
         
-        if ( currentProximity < proximity ) {
-          intersectX = currentIntersectX;
-          intersectY = currentIntersectY;
-          proximity = currentProximity;
+        if ( i == 0 ) {
+          return [ finalX, finalY ];
         }
-      }
+  
+        const t = ((boxLimits.initialX - initialX) * (initialY - finalY) - (boxLimits.initialY - initialY) * (initialX - finalX)) / i;
+        const u = -((boxLimits.initialX - boxLimits.finalX) * (boxLimits.initialY - initialY) - (boxLimits.initialY - boxLimits.finalY) * (boxLimits.initialX - initialX)) / i;
+  
+        if ( t > 0 && t < 1 && u > 0 ) {
+          const currentIntersectionX = boxLimits.initialX + t * (boxLimits.finalX - boxLimits.initialX);
+          const currentIntersectionY = boxLimits.initialY + t * (boxLimits.finalY - boxLimits.initialY);
+  
+          const a = initialX - boxLimits.initialX;
+          const b = initialY - boxLimits.initialY;
+  
+          const currentProximity = Math.sqrt( a * a +  b * b );
+          
+          if ( currentProximity < proximity ) {
+            intersectionX = currentIntersectionX;
+            intersectionY = currentIntersectionY;
+            proximity = currentProximity;
+          }
+        }
+      })
     });
 
-    if ( intersectX && intersectY ) {
-      return [ intersectX, intersectY ];
+    if ( intersectionX && intersectionY ) {
+      return [ intersectionX, intersectionY ];
     }
 
     return [finalX, finalY];
